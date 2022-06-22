@@ -11,17 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class LoginTicket {
 
     private Integer id;
-    private String username;
-    private String password;
-    private String salt;
-    private String email;
-    private Integer type;
+    private Integer userId;
+    private String ticket;
     private Integer status;
-    private String activationCode;
-    private String headerUrl;
-    private Date createTime;
+    private Date expired;
 
 }

@@ -21,7 +21,7 @@ public class MapperTests {
     private UserMapper userMapper;
 
     @Test
-    public void testSelect() {
+    public void testSelectAll() {
         log.info("----- selectAll method test ------");
         List<User> userList = userMapper.selectList(null);
         userList.forEach(System.out::println);
