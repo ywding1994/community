@@ -83,6 +83,12 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.12.0</version>
 		</dependency>
+		<!-- 整合commons-collections4 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
+		</dependency>
 		<!-- 整合kaptcha验证码 -->
 		<dependency>
 			<groupId>com.github.penggle</groupId>

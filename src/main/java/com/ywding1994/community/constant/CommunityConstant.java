@@ -1,4 +1,4 @@
-package com.ywding1994.community.util;
+package com.ywding1994.community.constant;
 
 public interface CommunityConstant {
 
