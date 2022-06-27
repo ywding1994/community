@@ -21,7 +21,7 @@ spring:
         host: smtp.126.com
         port: 465
         username: ywding1994@126.com
-        password: ${spring.mail.password:123456}
+        password: ${mailpassword:123456}
         protocol: smtps
         properties:
             mail:
