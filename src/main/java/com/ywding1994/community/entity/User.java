@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@TableName(value = "user", autoResultMap = true)
 public class User {
 
     /**
@@ -42,7 +44,7 @@ public class User {
     private String email;
 
     /**
-     * 用户类型
+     * 用户权限
      */
     private Integer type;
 

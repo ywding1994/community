@@ -1,7 +1,10 @@
 package com.ywding1994.community.constant;
 
-public interface LoginTicketConsant {
+public interface LoginTicketConstant {
 
+    /**
+     * 登录状态
+     */
     public static class Status {
 
         /**

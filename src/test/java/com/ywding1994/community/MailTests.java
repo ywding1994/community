@@ -9,7 +9,7 @@ import org.thymeleaf.context.Context;
 
 import com.ywding1994.community.util.MailCilent;
 
-@SpringBootTest(args = "--spring.mail.password=123456")
+@SpringBootTest
 public class MailTests {
 
     @Resource
@@ -25,6 +25,6 @@ public class MailTests {
         context.setVariable("username", to);
         String content = templateEngine.process("/mail/demo", context);
 
-        mailCilent.setMail(to, "邮件发送功能测试", content);
+        mailCilent.sendMail(to, "邮件发送功能测试", content);
     }
 }

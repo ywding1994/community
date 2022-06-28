@@ -31,7 +31,7 @@ public class MailCilent {
      * @param subject 邮件主题
      * @param content 邮件内容（HTML格式）
      */
-    public void setMail(String to, String subject, String content) {
+    public void sendMail(String to, String subject, String content) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);

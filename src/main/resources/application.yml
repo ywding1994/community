@@ -20,8 +20,8 @@ spring:
     mail:
         host: smtp.126.com
         port: 465
-        username: ywding1994@126.com
-        password: ${mailpassword:123456}
+        username: ${MAIL_USERNAME:ywding1994@126.com}
+        password: ${MAIL_PASSWORD:123456}
         protocol: smtps
         properties:
             mail:
@@ -36,3 +36,8 @@ mybatis-plus:
     global-config:
         db-config:
             id-type: auto
+
+# CommunityProperties
+community:
+    path:
+        domain: http://localhost:8080
