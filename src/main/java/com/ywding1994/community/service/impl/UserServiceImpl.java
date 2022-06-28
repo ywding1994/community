@@ -94,7 +94,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
-        mailCilent.sendMail(user.getEmail(), "激活账号", content);
+        // mailCilent.sendMail(user.getEmail(), "激活账号", content);
+        mailCilent.sendMailToMyself("激活账号", content);
 
         return map;
     }

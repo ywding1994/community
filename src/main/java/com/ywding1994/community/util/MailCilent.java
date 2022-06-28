@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 客户端信息类
+ * 电子邮件客户端类
  */
 @Component
 @Slf4j
@@ -43,6 +43,16 @@ public class MailCilent {
         } catch (MessagingException e) {
             log.error("邮件发送失败：", e.getMessage());
         }
+    }
+
+    /**
+     * 发送邮件给自己（仅用于测试）
+     *
+     * @param subject 邮件主题
+     * @param content 邮件内容（HTML格式）
+     */
+    public void sendMailToMyself(String subject, String content) {
+        this.sendMail(from, subject, content);
     }
 
 }
