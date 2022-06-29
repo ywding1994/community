@@ -15,8 +15,7 @@ import com.ywding1994.community.service.LoginTicketService;
 import com.ywding1994.community.util.CommunityUtil;
 
 @Service
-public class LoginTicketServiceImpl extends ServiceImpl<LoginTicketMapper, LoginTicket>
-                implements LoginTicketService, LoginTicketConstant {
+public class LoginTicketServiceImpl extends ServiceImpl<LoginTicketMapper, LoginTicket> implements LoginTicketService {
 
         @Override
         public LoginTicket generateLoginTicket(User user, int expiredSeconds) {

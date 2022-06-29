@@ -14,8 +14,7 @@ import com.ywding1994.community.entity.DiscussPost;
 import com.ywding1994.community.service.DiscussPostService;
 
 @Service
-public class DiscussPostServiceImpl extends ServiceImpl<DiscussPostMapper, DiscussPost>
-        implements DiscussPostService, DiscussPostConstant {
+public class DiscussPostServiceImpl extends ServiceImpl<DiscussPostMapper, DiscussPost> implements DiscussPostService {
 
     @Override
     public List<DiscussPost> findDiscussPosts(int userId, int current, int limit) {

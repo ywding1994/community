@@ -18,13 +18,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.constant.UserConstant;
 import com.ywding1994.community.dao.UserMapper;
+import com.ywding1994.community.entity.LoginTicket;
 import com.ywding1994.community.entity.User;
+import com.ywding1994.community.service.LoginTicketService;
 import com.ywding1994.community.service.UserService;
 import com.ywding1994.community.util.CommunityUtil;
 import com.ywding1994.community.util.MailCilent;
 
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, CommunityConstant {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Resource
     private MailCilent mailCilent;
@@ -32,11 +34,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private TemplateEngine templateEngine;
 
+    @Resource
+    private LoginTicketService loginTicketService;
+
     @Value("${community.path.domain}")
     private String domain;
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    public User getUserByUsername(String username) {
+        return this.getOne(new LambdaQueryWrapper<>(User.class).eq(User::getUsername, username));
+    }
 
     @Override
     public Map<String, Object> register(User user) {
@@ -60,13 +69,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 校验账号
-        if (Objects
-                .nonNull(this.getOne(new LambdaQueryWrapper<>(User.class).eq(User::getUsername, user.getUsername())))) {
+        if (Objects.nonNull(this.getUserByUsername(user.getUsername()))) {
             map.put("usernameMsg", "该账号已存在！");
             return map;
         }
 
-        // 检验邮箱
+        // 校验邮箱
         if (!user.getEmail().matches("[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z0-9]+")) {
             map.put("emailMsg", "邮箱地址不合法！");
             return map;
@@ -97,6 +105,60 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // mailCilent.sendMail(user.getEmail(), "激活账号", content);
         mailCilent.sendMailToMyself("激活账号", content);
 
+        return map;
+    }
+
+    @Override
+    public int activation(int userId, String activationCode) {
+        User user = this.getById(userId);
+        if (user.getStatus() == UserConstant.Status.ACTIVATED) {
+            return CommunityConstant.ACTIVATION_REPEAT;
+        } else if (user.getActivationCode().equals(activationCode)) {
+            user.setStatus(UserConstant.Status.ACTIVATED);
+            this.updateById(user);
+            return CommunityConstant.ACTIVATION_SUCCESS;
+        } else {
+            return CommunityConstant.ACTIVATION_FAILURE;
+        }
+    }
+
+    @Override
+    public Map<String, Object> login(String username, String password, int expiredSeconds) {
+        Map<String, Object> map = new HashMap<>();
+
+        // 校验空值
+        if (StringUtils.isBlank(username)) {
+            map.put("usernameMsg", "账号不能为空！");
+            return map;
+        }
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMsg", "密码不能为空！");
+            return map;
+        }
+
+        // 校验账号
+        User user = this.getUserByUsername(username);
+        if (Objects.isNull(user)) {
+            map.put("usernameMsg", "该账号不存在！");
+            return map;
+        }
+
+        // 校验账号状态
+        if (user.getStatus() == UserConstant.Status.UNACTIVATED) {
+            map.put("usernameMsg", "该账号未激活！");
+            return map;
+        }
+
+        // 校验密码
+        password = CommunityUtil.md5(password + user.getSalt());
+        if (!user.getPassword().equals(password)) {
+            map.put("passwordMsg", "密码不正确！");
+            return map;
+        }
+
+        // 生成用户的登陆凭证
+        LoginTicket loginTicket = loginTicketService.generateLoginTicket(user, expiredSeconds);
+        map.put("ticket", loginTicket.getTicket());
         return map;
     }
 
