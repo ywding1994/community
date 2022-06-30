@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -127,6 +128,13 @@ public class LoginController {
             model.addAttribute("passwordMsg", map.get("passwordMsg"));
             return "/site/login";
         }
+    }
+
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    @ApiOperation(value = "注销登录", httpMethod = "GET")
+    public String logout(@CookieValue("ticket") @ApiParam("登录凭证") String ticket) {
+        userService.logout(ticket);
+        return "redirect:/login";
     }
 
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)

@@ -16,6 +16,7 @@ import org.thymeleaf.context.Context;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ywding1994.community.constant.CommunityConstant;
+import com.ywding1994.community.constant.LoginTicketConstant;
 import com.ywding1994.community.constant.UserConstant;
 import com.ywding1994.community.dao.UserMapper;
 import com.ywding1994.community.entity.LoginTicket;
@@ -160,6 +161,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginTicket loginTicket = loginTicketService.generateLoginTicket(user, expiredSeconds);
         map.put("ticket", loginTicket.getTicket());
         return map;
+    }
+
+    @Override
+    public void logout(String ticket) {
+        loginTicketService.updateLoginTicket(ticket, LoginTicketConstant.Status.INVALID);
     }
 
 }

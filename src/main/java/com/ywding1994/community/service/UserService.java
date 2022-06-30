@@ -42,4 +42,11 @@ public interface UserService extends IService<User> {
      */
     public Map<String, Object> login(String username, String password, int expiredSeconds);
 
+    /**
+     * 注销登录
+     *
+     * @param ticket 登录凭证
+     */
+    public void logout(String ticket);
+
 }
