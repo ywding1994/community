@@ -1,9 +1,13 @@
 package com.ywding1994.community.util;
 
+import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * community项目相关的工具类
@@ -30,6 +34,36 @@ public class CommunityUtil {
             return null;
         }
         return DigestUtils.md5DigestAsHex(key.getBytes());
+    }
+
+    /**
+     * 获取json字符串
+     *
+     * @param code 状态码
+     * @param msg  信息
+     * @param map  键值对
+     * @return json字符串
+     */
+    public static String getJSONString(int code, String msg, Map<String, Object> map) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code", code);
+        jsonObject.put("msg", msg);
+        if (MapUtils.isNotEmpty(map)) {
+            for (String key : map.keySet()) {
+                jsonObject.put(key, map.get(key));
+            }
+        }
+        return jsonObject.toJSONString();
+    }
+
+    /**
+     * 获取json字符串
+     *
+     * @param code 状态码
+     * @return json字符串
+     */
+    public static String getJSONString(int code) {
+        return getJSONString(code, null, null);
     }
 
 }
