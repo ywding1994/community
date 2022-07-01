@@ -23,22 +23,22 @@ public class Page {
     @ApiModelProperty(value = "每页贴数上限")
     private int limit = 10;
 
-    @ApiModelProperty(value = "发帖数量")
+    @ApiModelProperty(value = "发帖数量", hidden = true)
     private int rows;
 
-    @ApiModelProperty(value = "查询路径（用于复用分页链接）")
+    @ApiModelProperty(value = "查询路径（用于复用分页链接）", hidden = true)
     private String path;
 
     @Getter(AccessLevel.NONE)
-    @ApiModelProperty(value = "总页数")
+    @ApiModelProperty(value = "总页数", hidden = true)
     private int pages;
 
     @Getter(AccessLevel.NONE)
-    @ApiModelProperty(value = "起始页码")
+    @ApiModelProperty(value = "起始页码", hidden = true)
     private int from;
 
     @Getter(AccessLevel.NONE)
-    @ApiModelProperty(value = "结束页码")
+    @ApiModelProperty(value = "结束页码", hidden = true)
     private int to;
 
     /**

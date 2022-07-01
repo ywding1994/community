@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ywding1994.community.constant.HTTPStatusCodeConstant;
 import com.ywding1994.community.entity.DiscussPost;
@@ -32,6 +33,7 @@ public class DiscussPostController {
     private HostHolder hostHolder;
 
     @RequestMapping(path = "/add", method = RequestMethod.POST)
+    @ResponseBody
     @ApiOperation(value = "发布讨论帖", httpMethod = "POST")
     public String addDiscussPost(@RequestParam @ApiParam("标题") String title,
             @RequestParam @ApiParam("内容") String content) {
