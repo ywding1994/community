@@ -60,6 +60,17 @@ public class CommunityUtil {
      * 获取json字符串
      *
      * @param code 状态码
+     * @param msg  信息
+     * @return
+     */
+    public static String getJSONString(int code, String msg) {
+        return getJSONString(code, msg, null);
+    }
+
+    /**
+     * 获取json字符串
+     *
+     * @param code 状态码
      * @return json字符串
      */
     public static String getJSONString(int code) {

@@ -20,7 +20,7 @@ public interface DiscussPostConstant {
     }
 
     /**
-     * 帖子状态
+     * 讨论帖状态
      */
     public static class Status {
 

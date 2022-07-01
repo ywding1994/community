@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ywding1994.community.constant.LoginTicketConstant;
@@ -34,6 +35,11 @@ public class LoginTicketServiceImpl extends ServiceImpl<LoginTicketMapper, Login
                                 "不合法的登录状态！");
                 this.update(new LambdaUpdateWrapper<>(LoginTicket.class).eq(LoginTicket::getTicket, ticket)
                                 .set(LoginTicket::getStatus, status));
+        }
+
+        @Override
+        public LoginTicket findLoginTicket(String ticket) {
+                return this.getOne(new LambdaQueryWrapper<>(LoginTicket.class).eq(LoginTicket::getTicket, ticket));
         }
 
 }

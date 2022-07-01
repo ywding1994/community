@@ -39,7 +39,7 @@ public class HomeController {
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index");
 
-        // 分页查询所有用户所发的帖子并显示
+        // 分页查询所有用户所发的讨论帖并显示
         List<DiscussPost> discussPosts = discussPostService.findDiscussPosts(0, page.getCurrent(), page.getLimit());
         List<Map<String, Object>> discussPostMaps = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(discussPosts)) {

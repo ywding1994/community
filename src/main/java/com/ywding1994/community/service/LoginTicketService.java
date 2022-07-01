@@ -23,4 +23,12 @@ public interface LoginTicketService extends IService<LoginTicket> {
      */
     public void updateLoginTicket(String ticket, int status);
 
+    /**
+     * 根据登录凭证查询对应的实体
+     *
+     * @param ticket 登陆凭证
+     * @return 登陆凭证对应的实体
+     */
+    public LoginTicket findLoginTicket(String ticket);
+
 }
