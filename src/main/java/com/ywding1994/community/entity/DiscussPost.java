@@ -44,11 +44,13 @@ public class DiscussPost {
     /**
      * 发帖类型
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer type;
 
     /**
      * 帖子状态
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer status;
 
     /**
@@ -60,11 +62,13 @@ public class DiscussPost {
     /**
      * 评论数量
      */
+    @TableField(fill = FieldFill.INSERT)
     private Integer commentCount;
 
     /**
      * 评分
      */
+    @TableField(fill = FieldFill.INSERT)
     private Double score;
 
 }
