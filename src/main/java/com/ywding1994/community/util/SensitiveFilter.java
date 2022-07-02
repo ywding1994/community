@@ -133,14 +133,12 @@ public class SensitiveFilter {
             if (Objects.isNull(p)) {
                 // l开头不会是敏感词，将l加入结果集并从l + 1处开始下一轮检查
                 stringBuffer.append(text.charAt(l));
-                l++;
-                r = l + 1;
+                r = ++l;
                 p = rootNode;
             } else if (p.isKeywordEnd()) {
                 // [l, r]处为敏感词，将以替换为预设字符，并从r + 1处开始下一轮检查
                 stringBuffer.append(REPLACEMENT);
-                r++;
-                l = r + 1;
+                l = ++r;
                 p = rootNode;
             } else {
                 // 本轮检查未完成，继续检查下一个字符

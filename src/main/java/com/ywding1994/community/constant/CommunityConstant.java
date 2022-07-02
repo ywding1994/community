@@ -73,7 +73,7 @@ public interface CommunityConstant {
     String TOPIC_SHARE = "share";
 
     /**
-     * 系统用户ID
+     * 系统用户id
      */
     int SYSTEM_USER_ID = 1;
 
