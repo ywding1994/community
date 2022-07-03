@@ -28,6 +28,11 @@ public interface FillConstant {
     public static final Double SCORE = 0.0;
 
     /**
+     * 目标id
+     */
+    public static final Integer TARGET_ID = 0;
+
+    /**
      * 获取创建时间
      *
      * @return 创建时间

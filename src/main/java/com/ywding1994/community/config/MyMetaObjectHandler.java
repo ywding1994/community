@@ -24,6 +24,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.strictInsertFill(metaObject, "status", Integer.class, FillConstant.STATUS);
         this.strictInsertFill(metaObject, "commentCount", Integer.class, FillConstant.COMMENT_COUNT);
         this.strictInsertFill(metaObject, "score", Double.class, FillConstant.SCORE);
+        this.strictInsertFill(metaObject, "targetId", Integer.class, FillConstant.TARGET_ID);
         this.strictInsertFill(metaObject, "createTime", Date.class, FillConstant.getcreateTime());
     }
 
