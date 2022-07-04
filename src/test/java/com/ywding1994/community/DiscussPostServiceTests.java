@@ -21,7 +21,6 @@ public class DiscussPostServiceTests {
 
     @Test
     public void testFindDiscussPosts() {
-
         // test case 1
         log.info("---------- findDiscussPosts: test case 1 starting... ----------");
         int userId = 101;
@@ -40,7 +39,6 @@ public class DiscussPostServiceTests {
         discussPosts = discussPostService.findDiscussPosts(userId, current, limit);
         discussPosts.forEach(System.out::println);
         log.info("---------- findDiscussPosts: test case 2 ended. ----------");
-
     }
 
 }
