@@ -20,4 +20,59 @@ public interface MessageService extends IService<Message> {
      */
     public List<Message> selectConversations(int userId, int current, int limit);
 
+    /**
+     * 查询指定用户的会话数量
+     * <p>
+     * 所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param userId 用户id
+     * @return 指定用户的会话数量
+     */
+    public int selectConversationCount(int userId);
+
+    /**
+     * 分页查询指定会话包含的私信消息列表
+     * <p>
+     * 所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param conversationId 会话id
+     * @param current        当前页码，从1开始
+     * @param limit          每页消息数上限
+     * @return 指定会话的分页消息列表，按id降序排列
+     */
+    public List<Message> selectLetters(String conversationId, int current, int limit);
+
+    /**
+     * 查询指定会话包含的私信消息数量
+     * <p>
+     * 所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param conversationId 会话id
+     * @return 指定会话的私信消息数量
+     */
+    public int selectLetterCount(String conversationId);
+
+    /**
+     * 查询指定用户的指定会话包含的未读私信消息数量
+     * <p>
+     * 若不指定会话id，则查询指定用户的全部会话包含的未读私信消息数量。
+     * </p>
+     *
+     * @param userId         用户id
+     * @param conversationId 会话id
+     * @return 未读私信消息数量
+     */
+    public int selectLetterUnreadCount(int userId, String conversationId);
+
+    /**
+     * 批量更新指定消息的状态
+     *
+     * @param ids    消息id列表
+     * @param status 待更新的消息状态
+     */
+    public void updateStatus(List<Integer> ids, int status);
+
 }
