@@ -18,7 +18,7 @@ public interface MessageService extends IService<Message> {
      * @param limit   每页消息数上限
      * @return 指定用户的会话列表，按id降序排列
      */
-    public List<Message> selectConversations(int userId, int current, int limit);
+    public List<Message> findConversations(int userId, int current, int limit);
 
     /**
      * 查询指定用户的会话数量
@@ -29,7 +29,7 @@ public interface MessageService extends IService<Message> {
      * @param userId 用户id
      * @return 指定用户的会话数量
      */
-    public int selectConversationCount(int userId);
+    public int findConversationCount(int userId);
 
     /**
      * 分页查询指定会话包含的私信消息列表
@@ -42,7 +42,7 @@ public interface MessageService extends IService<Message> {
      * @param limit          每页消息数上限
      * @return 指定会话的分页消息列表，按id降序排列
      */
-    public List<Message> selectLetters(String conversationId, int current, int limit);
+    public List<Message> findLetters(String conversationId, int current, int limit);
 
     /**
      * 查询指定会话包含的私信消息数量
@@ -53,7 +53,7 @@ public interface MessageService extends IService<Message> {
      * @param conversationId 会话id
      * @return 指定会话的私信消息数量
      */
-    public int selectLetterCount(String conversationId);
+    public int findLetterCount(String conversationId);
 
     /**
      * 查询指定用户的指定会话包含的未读私信消息数量
@@ -65,7 +65,14 @@ public interface MessageService extends IService<Message> {
      * @param conversationId 会话id
      * @return 未读私信消息数量
      */
-    public int selectLetterUnreadCount(int userId, String conversationId);
+    public int findLetterUnreadCount(int userId, String conversationId);
+
+    /**
+     * 新增消息
+     *
+     * @param message 消息实体
+     */
+    public void addMessage(Message message);
 
     /**
      * 批量更新指定消息的状态
@@ -74,5 +81,15 @@ public interface MessageService extends IService<Message> {
      * @param status 待更新的消息状态
      */
     public void updateStatus(List<Integer> ids, int status);
+
+    /**
+     * 阅读消息
+     * <p>
+     * 将指定消息的状态更新为已读。
+     * </p>
+     *
+     * @param ids 消息id列表
+     */
+    public void readMessages(List<Integer> ids);
 
 }

@@ -25,7 +25,7 @@ public class MessageServiceTests {
         int userId = 115;
         int current = 1;
         int limit = 10;
-        List<Message> messages = messageService.selectConversations(userId, current, limit);
+        List<Message> messages = messageService.findConversations(userId, current, limit);
         messages.forEach(System.out::println);
         log.info("---------- selectConversations: test ended. ----------");
     }
