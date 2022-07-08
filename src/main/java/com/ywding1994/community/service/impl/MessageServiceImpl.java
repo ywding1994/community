@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +30,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
     public List<Message> findConversations(int userId, int current, int limit) {
         Page<Message> page = new Page<>(current, limit, false);
         List<Integer> conversationIds = this.getBaseMapper().selectConversationIds(userId);
-        page = this.page(page, new LambdaQueryWrapper<>(Message.class).in(Message::getId, conversationIds)
-                .orderByDesc(Message::getId));
+        // 若conversationIds为空，条件构造器生成的SQL语句将存在逻辑错误
+        if (CollectionUtils.isNotEmpty(conversationIds)) {
+            page = this.page(page, new LambdaQueryWrapper<>(Message.class).in(Message::getId, conversationIds)
+                    .orderByDesc(Message::getId));
+        }
         return page.getRecords();
     }
 

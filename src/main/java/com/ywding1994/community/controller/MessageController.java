@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -144,10 +145,11 @@ public class MessageController {
         return ids;
     }
 
-    @RequestMapping(path = "/letter/send", method = RequestMethod.POST)
+    @RequestMapping(path = "/send", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "发送私信消息", httpMethod = "POST")
-    public String sendLetter(@ApiParam("收件人") String toName, @ApiParam("私信消息内容") String content) {
+    public String sendLetter(@RequestParam @ApiParam("收件人") String toName,
+            @RequestParam @ApiParam("私信消息内容") String content) {
         User target = userService.getOne(new LambdaQueryWrapper<>(User.class).eq(User::getUsername, toName));
         if (Objects.isNull(target)) {
             return CommunityUtil.getJSONString(HTTPStatusCodeConstant.INTERNAL_SERVER_ERROR, "目标用户不存在！");
