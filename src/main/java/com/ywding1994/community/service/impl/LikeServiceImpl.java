@@ -31,6 +31,7 @@ public class LikeServiceImpl implements LikeService {
 
                 // 开启事务
                 operations.multi();
+                // 第一次点击进行点赞，再次点击取消点赞
                 if (isMember) {
                     operations.opsForSet().remove(entityLikeKey, userId);
                     operations.opsForValue().decrement(userLikeKey);

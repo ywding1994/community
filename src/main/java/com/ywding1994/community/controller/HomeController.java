@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.entity.DiscussPost;
 import com.ywding1994.community.entity.User;
 import com.ywding1994.community.service.DiscussPostService;
+import com.ywding1994.community.service.LikeService;
 import com.ywding1994.community.service.UserService;
 import com.ywding1994.community.vo.Page;
 
@@ -32,6 +34,9 @@ public class HomeController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private LikeService likeService;
+
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     @ApiOperation(value = "请求主页", httpMethod = "GET")
     public String getIndexPage(Model model, Page page) {
@@ -45,9 +50,12 @@ public class HomeController {
         if (CollectionUtils.isNotEmpty(discussPosts)) {
             for (DiscussPost discussPost : discussPosts) {
                 Map<String, Object> map = new HashMap<>();
-                User user = userService.getById(discussPost.getUserId());
                 map.put("post", discussPost);
+                User user = userService.getById(discussPost.getUserId());
                 map.put("user", user);
+                long likeCount = likeService.findEntityLikeCount(CommunityConstant.ENTITY_TYPE_POST,
+                        discussPost.getId());
+                map.put("likeCount", likeCount);
                 discussPostMaps.add(map);
             }
         }
