@@ -27,7 +27,7 @@ public interface LikeService {
      * @param userId     用户id
      * @param entityType 实体类型
      * @param entityId   实体id
-     * @return 点赞状态
+     * @return 点赞状态（已点赞：1，未点赞：0）
      */
     public int findEntityLikeStatus(int userId, int entityType, int entityId);
 
