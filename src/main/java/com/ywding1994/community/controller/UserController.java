@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.ywding1994.community.annotation.LoginRequired;
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.entity.User;
 import com.ywding1994.community.service.FollowService;
@@ -37,6 +38,13 @@ public class UserController {
 
     @Resource
     private HostHolder hostHolder;
+
+    @LoginRequired
+    @RequestMapping(path = "/setting", method = RequestMethod.GET)
+    @ApiOperation(value = "请求设置页面", httpMethod = "GET")
+    public String getSettingPage() {
+        return "/site/setting";
+    }
 
     @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "请求个人主页", httpMethod = "GET")
