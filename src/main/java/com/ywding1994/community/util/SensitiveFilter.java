@@ -61,7 +61,7 @@ public class SensitiveFilter {
                 this.addKeyword(keyword);
             }
         } catch (IOException e) {
-            log.error("Load sensitive words file failed: " + e.getMessage());
+            log.error("Load Sensitive Words File Failed: " + e.getMessage());
         }
     }
 
