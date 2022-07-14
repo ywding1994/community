@@ -13,7 +13,7 @@ function send_letter() {
 		{ "toName": toName, "content": content },
 		function (data) {
 			data = $.parseJSON(data);
-			if (data.code == 0) {
+			if (data.code == 200) {
 				$("#hintBody").text("发送成功!");
 			} else {
 				$("#hintBody").text(data.msg);
