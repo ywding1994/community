@@ -64,4 +64,10 @@ public class HomeController {
         return "/index";
     }
 
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    @ApiOperation(value = "请求错误页面", httpMethod = "GET")
+    public String getErrorPage() {
+        return "/site/error/500";
+    }
+
 }
