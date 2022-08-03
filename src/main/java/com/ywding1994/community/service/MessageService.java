@@ -92,4 +92,54 @@ public interface MessageService extends IService<Message> {
      */
     public void readMessages(List<Integer> ids);
 
+    /**
+     * 查询指定用户的指定主题下的最新通知
+     * <p>
+     * 只返回最新的一条通知，所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param userId 用户id
+     * @param topic  指定主题
+     * @return 指定用户的指定主题的最新通知
+     */
+    public Message findLatestNotice(int userId, String topic);
+
+    /**
+     * 查询指定用户的指定主题下的通知数量
+     * <p>
+     * 所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param userId 用户id
+     * @param topic  指定主题
+     * @return 指定用户的指定主题下的通知数量
+     */
+    public int findNoticeCount(int userId, String topic);
+
+    /**
+     * 查询指定用户的指定主题下的未读通知数量
+     * <p>
+     * 若不指定主题，则查询指定用户的全部未读通知数量。
+     * </P>
+     *
+     * @param userId 用户id
+     * @param topic  指定主题
+     * @return 未读通知数量
+     */
+    public int findNoticeUnreadCount(int userId, String topic);
+
+    /**
+     * 分页查询指定用户的指定主题下的通知列表
+     * <p>
+     * 所有查询均不包括状态为删除的消息。
+     * </p>
+     *
+     * @param userId  用户id
+     * @param topic   指定主题
+     * @param current 当前页码，从1开始
+     * @param limit   每页通知数上限
+     * @return 指定用户的指定主题下的通知列表，按创建时间降序排列
+     */
+    public List<Message> findNotices(int userId, String topic, int current, int limit);
+
 }

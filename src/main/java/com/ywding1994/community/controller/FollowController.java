@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.constant.HTTPStatusCodeConstant;
 import com.ywding1994.community.entity.User;
+import com.ywding1994.community.event.Event;
+import com.ywding1994.community.event.EventProducer;
 import com.ywding1994.community.service.FollowService;
 import com.ywding1994.community.util.CommunityUtil;
 import com.ywding1994.community.util.HostHolder;
@@ -37,12 +39,27 @@ public class FollowController {
     @Resource
     private FollowService followService;
 
+    @Resource
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     @ApiOperation(value = "进行关注", httpMethod = "POST")
     public String follow(@RequestParam @ApiParam("实体类型") int entityType, @RequestParam @ApiParam("实体id") int entityId) {
         User user = hostHolder.getUser();
+
         followService.follow(user.getId(), entityType, entityId);
+
+        // 触发关注事件
+        Event event = Event.builder()
+                .topic(CommunityConstant.TOPIC_FOLLOW)
+                .userId(hostHolder.getUser().getId())
+                .entityType(entityType)
+                .entityId(entityId)
+                .entityUserId(entityId)
+                .build();
+        eventProducer.fireEvent(event);
+
         return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK, "已关注！");
     }
 
