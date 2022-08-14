@@ -136,7 +136,7 @@ public class SensitiveFilter {
                 r = ++l;
                 p = rootNode;
             } else if (p.isKeywordEnd()) {
-                // [l, r]处为敏感词，将以替换为预设字符，并从r + 1处开始下一轮检查
+                // [l, r]处为敏感词，将替换为预设字符，并从r + 1处开始下一轮检查
                 stringBuffer.append(REPLACEMENT);
                 l = ++r;
                 p = rootNode;

@@ -16,23 +16,25 @@ import com.ywding1994.community.controller.interceptor.MessageInterceptor;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Resource
-    private LoginTicketInterceptor loginTicketInterceptor;
+        @Resource
+        private LoginTicketInterceptor loginTicketInterceptor;
 
-    @Resource
-    private LoginRequiredInterceptor loginRequiredInterceptor;
+        @Resource
+        private LoginRequiredInterceptor loginRequiredInterceptor;
 
-    @Resource
-    private MessageInterceptor messageInterceptor;
+        @Resource
+        private MessageInterceptor messageInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginTicketInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
-                "/**/*.jpeg");
-        registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
-                "/**/*.jpg", "/**/*.jpeg");
-        registry.addInterceptor(messageInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
-                "/**/*.jpg", "/**/*.jpeg");
-    }
+        @Override
+        public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(loginTicketInterceptor).excludePathPatterns("/**/*.css", "/**/*.js",
+                                "/**/*.png",
+                                "/**/*.jpeg");
+                registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/**/*.css", "/**/*.js",
+                                "/**/*.png",
+                                "/**/*.jpg", "/**/*.jpeg");
+                registry.addInterceptor(messageInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
+                                "/**/*.jpg", "/**/*.jpeg");
+        }
 
 }
