@@ -70,6 +70,7 @@ public class CommentController {
                     .topic(CommunityConstant.TOPIC_PUBLISH)
                     .userId(comment.getUserId())
                     .entityType(CommunityConstant.ENTITY_TYPE_POST)
+                    .entityId(discussPostId)
                     .build();
             eventProducer.fireEvent(event);
         }

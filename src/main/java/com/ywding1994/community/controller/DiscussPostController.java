@@ -23,6 +23,8 @@ import com.ywding1994.community.constant.HTTPStatusCodeConstant;
 import com.ywding1994.community.entity.Comment;
 import com.ywding1994.community.entity.DiscussPost;
 import com.ywding1994.community.entity.User;
+import com.ywding1994.community.event.Event;
+import com.ywding1994.community.event.EventProducer;
 import com.ywding1994.community.service.CommentService;
 import com.ywding1994.community.service.DiscussPostService;
 import com.ywding1994.community.service.LikeService;
@@ -47,6 +49,9 @@ public class DiscussPostController {
     private DiscussPostService discussPostService;
 
     @Resource
+    private EventProducer eventProducer;
+
+    @Resource
     private UserService userService;
 
     @Resource
@@ -67,11 +72,19 @@ public class DiscussPostController {
         }
 
         DiscussPost discussPost = DiscussPost.builder().userId(user.getId()).title(title).content(content).build();
-        if (discussPostService.addDiscussPost(discussPost)) {
-            return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK, "讨论帖发布成功！");
-        } else {
+        if (!discussPostService.addDiscussPost(discussPost)) {
             return CommunityUtil.getJSONString(HTTPStatusCodeConstant.INTERNAL_SERVER_ERROR, "讨论帖发布失败！");
         }
+
+        // 触发发帖事件
+        Event event = Event.builder()
+                .topic(CommunityConstant.TOPIC_PUBLISH)
+                .userId(user.getId())
+                .entityType(CommunityConstant.ENTITY_TYPE_POST)
+                .entityId(discussPost.getId())
+                .build();
+        eventProducer.fireEvent(event);
+        return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK, "讨论帖发布成功！");
     }
 
     @RequestMapping(path = "/detail/{discussPostId}", method = RequestMethod.GET)

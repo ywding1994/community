@@ -75,7 +75,7 @@ public class FollowController {
 
     @RequestMapping(path = "/followees/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "请求关注用户详情页", httpMethod = "GET")
-    public String getFollowees(Model model, @PathVariable("userId") @ApiParam("用户id") int userId, Page page) {
+    public String getFollowees(Model model, Page page, @PathVariable("userId") @ApiParam("用户id") int userId) {
         User user = hostHolder.getUser();
         if (Objects.isNull(user)) {
             throw new RuntimeException("该用户不存在！");
@@ -101,7 +101,7 @@ public class FollowController {
 
     @RequestMapping(path = "/followers/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "请求关注者详情页", httpMethod = "GET")
-    public String getFollowers(Model model, @PathVariable("userId") @ApiParam("用户id") int userId, Page page) {
+    public String getFollowers(Model model, Page page, @PathVariable("userId") @ApiParam("用户id") int userId) {
         User user = hostHolder.getUser();
         if (Objects.isNull(user)) {
             throw new RuntimeException("该用户不存在！");
