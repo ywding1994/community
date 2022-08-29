@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ywding1994.community.constant.CommentConstant;
 import com.ywding1994.community.constant.CommunityConstant;
+import com.ywding1994.community.constant.DiscussPostConstant;
 import com.ywding1994.community.constant.HTTPStatusCodeConstant;
 import com.ywding1994.community.entity.Comment;
 import com.ywding1994.community.entity.DiscussPost;
@@ -175,6 +176,75 @@ public class DiscussPostController {
         }
         model.addAttribute("comments", commentVos);
         return "/site/discuss-detail";
+    }
+
+    @RequestMapping(path = "/top", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(value = "置顶", httpMethod = "POST")
+    public String setTop(@RequestParam @ApiParam("讨论帖id") int id) {
+        // 校验登录状态
+        User user = hostHolder.getUser();
+        if (Objects.isNull(user)) {
+            return CommunityUtil.getJSONString(HTTPStatusCodeConstant.FORBIDDEN, "用户未登录！");
+        }
+
+        discussPostService.updateType(id, DiscussPostConstant.Type.STICKY);
+
+        // 触发发帖事件
+        Event event = Event.builder()
+                .topic(CommunityConstant.TOPIC_PUBLISH)
+                .userId(hostHolder.getUser().getId())
+                .entityType(CommunityConstant.ENTITY_TYPE_POST)
+                .entityId(id)
+                .build();
+        eventProducer.fireEvent(event);
+        return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK);
+    }
+
+    @RequestMapping(path = "/wonderful", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(value = "加精", httpMethod = "POST")
+    public String setWonderful(@RequestParam @ApiParam("讨论帖id") int id) {
+        // 校验登录状态
+        User user = hostHolder.getUser();
+        if (Objects.isNull(user)) {
+            return CommunityUtil.getJSONString(HTTPStatusCodeConstant.FORBIDDEN, "用户未登录！");
+        }
+
+        discussPostService.updateStatus(id, DiscussPostConstant.Status.HIGHLIGHTED);
+
+        // 触发发帖事件
+        Event event = Event.builder()
+                .topic(CommunityConstant.TOPIC_PUBLISH)
+                .userId(hostHolder.getUser().getId())
+                .entityType(CommunityConstant.ENTITY_TYPE_POST)
+                .entityId(id)
+                .build();
+        eventProducer.fireEvent(event);
+        return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK);
+    }
+
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    @ApiOperation(value = "删除", httpMethod = "POST")
+    public String setDelete(@RequestParam @ApiParam("讨论帖id") int id) {
+        // 校验登录状态
+        User user = hostHolder.getUser();
+        if (Objects.isNull(user)) {
+            return CommunityUtil.getJSONString(HTTPStatusCodeConstant.FORBIDDEN, "用户未登录！");
+        }
+
+        discussPostService.updateStatus(id, DiscussPostConstant.Status.BLOCKED);
+
+        // 触发删帖事件
+        Event event = Event.builder()
+                .topic(CommunityConstant.TOPIC_DELETE)
+                .userId(hostHolder.getUser().getId())
+                .entityType(CommunityConstant.ENTITY_TYPE_POST)
+                .entityId(id)
+                .build();
+        eventProducer.fireEvent(event);
+        return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK);
     }
 
 }

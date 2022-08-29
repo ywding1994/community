@@ -94,4 +94,25 @@ public class EventConsumer {
         elasticsearchService.saveDiscussPost(discussPost);
     }
 
+    /**
+     * 消费删帖事件
+     *
+     * @param record 消费者记录
+     */
+    @KafkaListener(topics = { CommunityConstant.TOPIC_DELETE })
+    public void handleDeleteMessage(ConsumerRecord<String, Object> record) {
+        if (Objects.isNull(record) || Objects.isNull(record.value())) {
+            log.error("消息的内容为空！");
+            return;
+        }
+
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if (Objects.isNull(event)) {
+            log.error("消息格式错误！");
+            return;
+        }
+
+        elasticsearchService.deleteDiscussPost(event.getEntityId());
+    }
+
 }

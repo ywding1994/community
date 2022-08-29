@@ -61,4 +61,26 @@ public class DiscussPostServiceImpl extends ServiceImpl<DiscussPostMapper, Discu
         return this.save(discussPost);
     }
 
+    @Override
+    public boolean updateType(int id, int type) {
+        DiscussPost discussPost = this.getById(id);
+        if (Objects.isNull(discussPost)) {
+            return false;
+        }
+
+        discussPost.setType(type);
+        return this.updateById(discussPost);
+    }
+
+    @Override
+    public boolean updateStatus(int id, int status) {
+        DiscussPost discussPost = this.getById(id);
+        if (Objects.isNull(discussPost)) {
+            return false;
+        }
+
+        discussPost.setStatus(status);
+        return this.updateById(discussPost);
+    }
+
 }

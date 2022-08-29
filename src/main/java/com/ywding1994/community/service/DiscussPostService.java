@@ -3,6 +3,7 @@ package com.ywding1994.community.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ywding1994.community.constant.DiscussPostConstant;
 import com.ywding1994.community.entity.DiscussPost;
 
 public interface DiscussPostService extends IService<DiscussPost> {
@@ -38,5 +39,23 @@ public interface DiscussPostService extends IService<DiscussPost> {
      * @return 发布结果
      */
     public boolean addDiscussPost(DiscussPost discussPost);
+
+    /**
+     * 更新指定讨论帖的类型
+     *
+     * @param id   讨论帖id
+     * @param type 讨论帖类型，参见{@link DiscussPostConstant.Type}
+     * @return 更新结果
+     */
+    public boolean updateType(int id, int type);
+
+    /**
+     * 更新指定讨论帖的状态
+     *
+     * @param id     讨论帖id
+     * @param status 讨论帖状态，参见{@link DiscussPostConstant.Status}
+     * @return 更新结果
+     */
+    public boolean updateStatus(int id, int status);
 
 }
