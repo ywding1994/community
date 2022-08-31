@@ -14,12 +14,13 @@ public interface DiscussPostService extends IService<DiscussPost> {
      * 注：若userId = 0则分页查询所有用户所发的讨论帖，所有查询均不包括被拉黑的讨论帖。
      * </p>
      *
-     * @param userId  用户id
-     * @param current 当前页码，从1开始
-     * @param limit   每页贴数上限
-     * @return 指定用户所发的讨论帖，按发帖类型、创建时间降序排列
+     * @param userId    用户id
+     * @param current   当前页码，从1开始
+     * @param limit     每页贴数上限
+     * @param orderMode 排序模式，0为默认排列（按发帖类型、创建时间降序排列），1为按热度排列（按发帖类型、讨论帖分数、创建时间降序排列）
+     * @return 指定用户所发的讨论帖
      */
-    public List<DiscussPost> findDiscussPosts(int userId, int current, int limit);
+    public List<DiscussPost> findDiscussPosts(int userId, int current, int limit, int orderMode);
 
     /**
      * 查询指定用户的发帖数量
@@ -57,5 +58,14 @@ public interface DiscussPostService extends IService<DiscussPost> {
      * @return 更新结果
      */
     public boolean updateStatus(int id, int status);
+
+    /**
+     * 更新指定讨论帖的分数
+     *
+     * @param id    讨论帖id
+     * @param score 待更新的分数
+     * @return 更新结果
+     */
+    public boolean updateScore(int id, double score);
 
 }

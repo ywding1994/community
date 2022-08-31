@@ -29,6 +29,12 @@ import com.ywding1994.community.vo.SearchResult;
 @Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
 
+    @Resource
+    private DiscussPostRepository discussPostRepository;
+
+    @Resource(name = "client")
+    private RestHighLevelClient restHighLevelClient;
+
     /**
      * 索引名
      * <p>
@@ -36,12 +42,6 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
      * </p>
      */
     private static final String INDEX_NAME = "discusspost";
-
-    @Resource
-    private DiscussPostRepository discussPostRepository;
-
-    @Resource(name = "client")
-    private RestHighLevelClient restHighLevelClient;
 
     @Override
     public void saveDiscussPost(DiscussPost discussPost) {

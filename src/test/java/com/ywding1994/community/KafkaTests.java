@@ -14,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 public class KafkaTests {
+    @Resource
+    private KafkaProducer kafkaProducer;
 
     private static final String TOPIC = "test";
 
-    @Resource
-    private KafkaProducer kafkaProducer;
 
     @Test
     public void testKafka() {

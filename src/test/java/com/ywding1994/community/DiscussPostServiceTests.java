@@ -27,7 +27,7 @@ public class DiscussPostServiceTests {
         int current = 1;
         int limit = 5;
         List<DiscussPost> discussPosts = null;
-        discussPosts = discussPostService.findDiscussPosts(userId, current, limit);
+        discussPosts = discussPostService.findDiscussPosts(userId, current, limit, 0);
         discussPosts.forEach(System.out::println);
         log.info("---------- findDiscussPosts: test case 1 ended. ----------");
 
@@ -36,7 +36,7 @@ public class DiscussPostServiceTests {
         userId = 0;
         current = 5;
         limit = 10;
-        discussPosts = discussPostService.findDiscussPosts(userId, current, limit);
+        discussPosts = discussPostService.findDiscussPosts(userId, current, limit, 0);
         discussPosts.forEach(System.out::println);
         log.info("---------- findDiscussPosts: test case 2 ended. ----------");
     }

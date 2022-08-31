@@ -9,6 +9,7 @@ import java.util.Objects;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import com.ywding1994.community.service.LikeService;
 import com.ywding1994.community.service.UserService;
 import com.ywding1994.community.util.CommunityUtil;
 import com.ywding1994.community.util.HostHolder;
+import com.ywding1994.community.util.RedisKeyUtil;
 import com.ywding1994.community.vo.Page;
 
 import io.swagger.annotations.Api;
@@ -51,6 +53,9 @@ public class DiscussPostController {
 
     @Resource
     private EventProducer eventProducer;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private UserService userService;
@@ -85,6 +90,10 @@ public class DiscussPostController {
                 .entityId(discussPost.getId())
                 .build();
         eventProducer.fireEvent(event);
+
+        // 计算讨论帖分数并存入Redis
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, discussPost.getId());
         return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK, "讨论帖发布成功！");
     }
 
@@ -221,6 +230,10 @@ public class DiscussPostController {
                 .entityId(id)
                 .build();
         eventProducer.fireEvent(event);
+
+        // 计算讨论帖分数并存入Redis
+        String redisKey = RedisKeyUtil.getPostScoreKey();
+        redisTemplate.opsForSet().add(redisKey, id);
         return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK);
     }
 

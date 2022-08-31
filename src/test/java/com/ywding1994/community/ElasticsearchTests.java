@@ -58,15 +58,15 @@ public class ElasticsearchTests {
     @Test
     public void testInsertList() {
         log.info("---------- Elasticsearch: test insertList starting... ----------");
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(101, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(102, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(103, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(111, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(112, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(131, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(132, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(133, 1, 100));
-        discussPostRepository.saveAll(discussPostService.findDiscussPosts(134, 1, 100));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(101, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(102, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(103, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(111, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(112, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(131, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(132, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(133, 1, 100, 0));
+        discussPostRepository.saveAll(discussPostService.findDiscussPosts(134, 1, 100, 0));
         log.info("---------- Elasticsearch: test insertList ended. ----------");
     }
 

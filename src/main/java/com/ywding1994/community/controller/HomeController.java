@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.entity.DiscussPost;
@@ -23,6 +24,7 @@ import com.ywding1994.community.vo.Page;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Controller
 @Api(tags = "主页接口")
@@ -39,13 +41,15 @@ public class HomeController {
 
     @RequestMapping(path = "/index", method = RequestMethod.GET)
     @ApiOperation(value = "请求主页", httpMethod = "GET")
-    public String getIndexPage(Model model, Page page) {
+    public String getIndexPage(Model model, Page page,
+            @RequestParam(name = "orderMode", defaultValue = "0") @ApiParam("排序模式") int orderMode) {
         // 设置分页信息
         page.setRows(discussPostService.findDiscussPostRows(0));
-        page.setPath("/index");
+        page.setPath("/index?orderMode=" + orderMode);
 
         // 分页查询所有用户所发的讨论帖并显示
-        List<DiscussPost> discussPosts = discussPostService.findDiscussPosts(0, page.getCurrent(), page.getLimit());
+        List<DiscussPost> discussPosts = discussPostService.findDiscussPosts(0, page.getCurrent(), page.getLimit(),
+                orderMode);
         List<Map<String, Object>> discussPostMaps = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(discussPosts)) {
             for (DiscussPost discussPost : discussPosts) {

@@ -46,6 +46,11 @@ public class RedisKeyUtil {
     private static final String PREFIX_USER = "user";
 
     /**
+     * 关键字前缀：讨论帖
+     */
+    private static final String PREFIX_POST = "post";
+
+    /**
      * 获取关键字：指定实体获得的赞
      *
      * @param entityType 实体类型
@@ -116,6 +121,15 @@ public class RedisKeyUtil {
      */
     public static String getUserKey(int userId) {
         return String.join(SPLIT, PREFIX_USER, Integer.toString(userId));
+    }
+
+    /**
+     * 获取关键字：讨论帖分数
+     *
+     * @return 关键字：讨论帖分数
+     */
+    public static String getPostScoreKey() {
+        return PREFIX_POST + SPLIT + "score";
     }
 
 }

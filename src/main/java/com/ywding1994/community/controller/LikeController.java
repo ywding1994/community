@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +20,7 @@ import com.ywding1994.community.event.EventProducer;
 import com.ywding1994.community.service.LikeService;
 import com.ywding1994.community.util.CommunityUtil;
 import com.ywding1994.community.util.HostHolder;
+import com.ywding1994.community.util.RedisKeyUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,9 @@ public class LikeController {
 
     @Resource
     private EventProducer eventProducer;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
@@ -72,6 +77,11 @@ public class LikeController {
             eventProducer.fireEvent(event);
         }
 
+        if (entityType == CommunityConstant.ENTITY_TYPE_POST) {
+            // 计算讨论帖分数并存入Redis
+            String redisKey = RedisKeyUtil.getPostScoreKey();
+            redisTemplate.opsForSet().add(redisKey, postId);
+        }
         return CommunityUtil.getJSONString(HTTPStatusCodeConstant.OK, null, map);
     }
 

@@ -40,6 +40,22 @@ spring:
             group-id: community-consumer-group
             enable-auto-commit: true
             auto-commit-interval: 3000
+    # QuartzProperties
+    quartz:
+        job-store-type: jdbc
+        scheduler-name: communityScheduler
+        properties:
+            org:
+                quartz:
+                    scheduler:
+                        instanceId: AUTO
+                    jobStore:
+                        class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+                        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                        isClustered: true
+                    threadPool:
+                        class: org.quartz.simpl.SimpleThreadPool
+                        threadCount: 5
 
 # MyBatis-PlusProperties
 mybatis-plus:
@@ -52,6 +68,12 @@ mybatis-plus:
 # ElasticsearchProperties
 elasticSearch:
     url: 127.0.0.1:9200
+
+# CaffeineProperties
+caffeine:
+    posts:
+        max-size: 15
+        expire-seconds: 180
 
 # CommunityProperties
 community:

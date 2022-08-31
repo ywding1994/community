@@ -1,6 +1,5 @@
 package com.ywding1994.community.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,13 +24,15 @@ public class DiscussPostServiceImpl extends ServiceImpl<DiscussPostMapper, Discu
     private SensitiveFilter sensitiveFilter;
 
     @Override
-    public List<DiscussPost> findDiscussPosts(int userId, int current, int limit) {
+    public List<DiscussPost> findDiscussPosts(int userId, int current, int limit, int orderMode) {
         Page<DiscussPost> page = new Page<>(current, limit, false);
         page = this.page(page,
                 new LambdaQueryWrapper<>(DiscussPost.class)
                         .ne(DiscussPost::getStatus, DiscussPostConstant.Status.BLOCKED)
                         .eq(userId != 0, DiscussPost::getUserId, userId)
-                        .orderByDesc(Arrays.asList(DiscussPost::getType, DiscussPost::getCreateTime)));
+                        .orderByDesc(DiscussPost::getType)
+                        .orderByDesc(orderMode == 1, DiscussPost::getScore)
+                        .orderByDesc(DiscussPost::getCreateTime));
         return page.getRecords();
     }
 
@@ -80,6 +81,17 @@ public class DiscussPostServiceImpl extends ServiceImpl<DiscussPostMapper, Discu
         }
 
         discussPost.setStatus(status);
+        return this.updateById(discussPost);
+    }
+
+    @Override
+    public boolean updateScore(int id, double score) {
+        DiscussPost discussPost = this.getById(id);
+        if (Objects.isNull(discussPost)) {
+            return false;
+        }
+
+        discussPost.setScore(score);
         return this.updateById(discussPost);
     }
 
