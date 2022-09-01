@@ -12,13 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ywding1994.community.constant.CommentConstant;
 import com.ywding1994.community.dao.CommentMapper;
 import com.ywding1994.community.entity.Comment;
-import com.ywding1994.community.entity.DiscussPost;
 import com.ywding1994.community.service.CommentService;
 import com.ywding1994.community.service.DiscussPostService;
 import com.ywding1994.community.util.SensitiveFilter;
@@ -64,8 +62,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         // 更新讨论帖的评论数量
         if (comment.getEntityType() == CommentConstant.EntityType.ENTITY_TYPE_POST) {
             int count = this.findCommentCount(comment.getEntityType(), comment.getEntityId());
-            discussPostService.update(new LambdaUpdateWrapper<>(DiscussPost.class)
-                    .eq(DiscussPost::getId, comment.getEntityId()).set(DiscussPost::getCommentCount, count));
+            discussPostService.updateCommentCount(comment.getEntityId(), count);
         }
     }
 

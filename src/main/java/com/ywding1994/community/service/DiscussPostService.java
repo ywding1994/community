@@ -42,6 +42,15 @@ public interface DiscussPostService extends IService<DiscussPost> {
     public boolean addDiscussPost(DiscussPost discussPost);
 
     /**
+     * 更新指定讨论帖的评论数量
+     *
+     * @param id           讨论帖id
+     * @param commentCount 评论数量
+     * @return 更新结果
+     */
+    public boolean updateCommentCount(int id, int commentCount);
+
+    /**
      * 更新指定讨论帖的类型
      *
      * @param id   讨论帖id
@@ -63,7 +72,7 @@ public interface DiscussPostService extends IService<DiscussPost> {
      * 更新指定讨论帖的分数
      *
      * @param id    讨论帖id
-     * @param score 待更新的分数
+     * @param score 分数
      * @return 更新结果
      */
     public boolean updateScore(int id, double score);
