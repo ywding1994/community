@@ -75,6 +75,14 @@ caffeine:
         max-size: 15
         expire-seconds: 180
 
+# ActuatorProperties
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+                exclude: shutdown
+
 # CommunityProperties
 community:
     path:
