@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.ywding1994.community.controller.interceptor.DataInterceptor;
 import com.ywding1994.community.controller.interceptor.LoginRequiredInterceptor;
 import com.ywding1994.community.controller.interceptor.LoginTicketInterceptor;
 import com.ywding1994.community.controller.interceptor.MessageInterceptor;
@@ -25,6 +26,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         @Resource
         private MessageInterceptor messageInterceptor;
 
+        @Resource
+        private DataInterceptor dataInterceptor;
+
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
                 registry.addInterceptor(loginTicketInterceptor).excludePathPatterns("/**/*.css", "/**/*.js",
@@ -34,6 +38,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                                 "/**/*.png",
                                 "/**/*.jpg", "/**/*.jpeg");
                 registry.addInterceptor(messageInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
+                                "/**/*.jpg", "/**/*.jpeg");
+                registry.addInterceptor(dataInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
                                 "/**/*.jpg", "/**/*.jpeg");
         }
 

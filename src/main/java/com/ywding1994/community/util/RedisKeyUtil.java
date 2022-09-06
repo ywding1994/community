@@ -51,6 +51,22 @@ public class RedisKeyUtil {
     private static final String PREFIX_POST = "post";
 
     /**
+     * 关键字前缀：UV
+     * <p>
+     * UV：Unique Vistor，独立访客，需通过用户ip排重统计数据，且每次访问都需要进行统计。
+     * </p>
+     */
+    private static final String PREFIX_UV = "uv";
+
+    /**
+     * 关键字前缀：DAU
+     * <p>
+     * DAU：Daily Active User，日活跃用户，需通过用户ip排重统计数据，访问过一次则认为其活跃。
+     * </p>
+     */
+    private static final String PREFIX_DAU = "dau";
+
+    /**
      * 获取关键字：指定实体获得的赞
      *
      * @param entityType 实体类型
@@ -130,6 +146,48 @@ public class RedisKeyUtil {
      */
     public static String getPostScoreKey() {
         return PREFIX_POST + SPLIT + "score";
+    }
+
+    /**
+     * 获取关键字：单日UV
+     *
+     * @param date 日期
+     * @return 关键字：单日UV
+     */
+    public static String getUVKey(String date) {
+        return PREFIX_UV + SPLIT + date;
+    }
+
+    /**
+     * 获取关键字：区间UV
+     *
+     * @param startDate 起始日期
+     * @param endDate   终止日期
+     * @return 关键字：区间UV
+     */
+    public static String getUVKey(String startDate, String endDate) {
+        return PREFIX_UV + SPLIT + startDate + SPLIT + endDate;
+    }
+
+    /**
+     * 获取关键字：单日DAU
+     *
+     * @param date 日期
+     * @return 关键字：单日DAU
+     */
+    public static String getDAUKey(String date) {
+        return PREFIX_DAU + SPLIT + date;
+    }
+
+    /**
+     * 获取关键字：区间DAU
+     *
+     * @param startDate 起始日期
+     * @param endDAte   终止日期
+     * @return 关键字：区间DAU
+     */
+    public static String getDAUKey(String startDate, String endDAte) {
+        return PREFIX_DAU + SPLIT + startDate + SPLIT + endDAte;
     }
 
 }
