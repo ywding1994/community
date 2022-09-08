@@ -26,7 +26,7 @@ public class LikeServiceImpl implements LikeService {
             @SuppressWarnings({ "rawtypes", "unchecked" })
             public Object execute(RedisOperations operations) throws DataAccessException {
                 String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType, entityId);
-                String userLikeKey = RedisKeyUtil.getUserKey(entityUserId);
+                String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
                 boolean isMember = operations.opsForSet().isMember(entityLikeKey, userId);
 
                 // 开启事务
