@@ -123,6 +123,49 @@ public class UserController {
         }
     }
 
+    @LoginRequired
+    @RequestMapping(path = "/updatePassword", method = RequestMethod.POST)
+    @ApiOperation(value = "修改密码", httpMethod = "POST")
+    public String updatePassword(Model model,
+            @ApiParam("原始密码") String originalPassword,
+            @ApiParam("新密码") String newPassword,
+            @ApiParam("确认密码") String confirmPassword) {
+        // 参数校验
+        // 校验空值
+        if (StringUtils.isBlank(originalPassword)) {
+            model.addAttribute("originalPasswordMsg", "请输入原始密码！");
+            return "site/setting";
+        }
+        if (StringUtils.isBlank(newPassword)) {
+            model.addAttribute("newPasswordMsg", "请输入新密码！");
+            return "site/setting";
+        }
+        if (StringUtils.isBlank(confirmPassword)) {
+            model.addAttribute("confirmPasswordMsg", "请再次输入新密码！");
+            return "site/setting";
+        }
+        // 校验原始密码是否正确
+        User user = hostHolder.getUser();
+        if (!CommunityUtil.md5(originalPassword + user.getSalt()).equals(user.getPassword())) {
+            model.addAttribute("originalPasswordMsg", "密码错误！");
+            return "site/setting";
+        }
+        // 校验两次新密码是否输入一致
+        if (!confirmPassword.equals(newPassword)) {
+            model.addAttribute("confirmPasswordMsg", "两次输入的密码不一致！");
+            return "site/setting";
+        }
+        // 校验新旧密码是否不同
+        if (newPassword.equals(originalPassword)) {
+            model.addAttribute("newPasswordMsg", "新密码不能与原始密码相同");
+            return "site/setting";
+        }
+
+        // 修改密码并重定向到主页
+        userService.updatePassword(user.getId(), CommunityUtil.md5(newPassword + user.getSalt()));
+        return "redirect:/index";
+    }
+
     @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "请求个人主页", httpMethod = "GET")
     public String getProfilePage(Model model, @PathVariable("userId") @ApiParam("用户id") int userId) {

@@ -49,4 +49,13 @@ public interface UserService extends IService<User> {
      */
     public void logout(String ticket);
 
+    /**
+     * 修改密码
+     *
+     * @param userId   用户id
+     * @param password 修改后的密码
+     * @return 修改结果
+     */
+    public boolean updatePassword(int userId, String password);
+
 }

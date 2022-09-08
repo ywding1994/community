@@ -168,4 +168,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         loginTicketService.updateLoginTicket(ticket, LoginTicketConstant.Status.INVALID);
     }
 
+    @Override
+    public boolean updatePassword(int userId, String password) {
+        User user = this.getById(userId);
+        if (Objects.isNull(user)) {
+            return false;
+        }
+
+        user.setPassword(password);
+        return this.updateById(user);
+    }
+
 }
