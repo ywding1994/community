@@ -31,16 +31,30 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         @Override
         public void addInterceptors(InterceptorRegistry registry) {
-                registry.addInterceptor(loginTicketInterceptor).excludePathPatterns("/**/*.css", "/**/*.js",
+                registry.addInterceptor(loginTicketInterceptor).excludePathPatterns(
+                                "/**/*.css",
+                                "/**/*.js",
                                 "/**/*.png",
+                                "/**/*.jpg",
                                 "/**/*.jpeg");
-                registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns("/**/*.css", "/**/*.js",
+                registry.addInterceptor(loginRequiredInterceptor).excludePathPatterns(
+                                "/**/*.css",
+                                "/**/*.js",
                                 "/**/*.png",
-                                "/**/*.jpg", "/**/*.jpeg");
-                registry.addInterceptor(messageInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
-                                "/**/*.jpg", "/**/*.jpeg");
-                registry.addInterceptor(dataInterceptor).excludePathPatterns("/**/*.css", "/**/*.js", "/**/*.png",
-                                "/**/*.jpg", "/**/*.jpeg");
+                                "/**/*.jpg",
+                                "/**/*.jpeg");
+                registry.addInterceptor(messageInterceptor).excludePathPatterns(
+                                "/**/*.css",
+                                "/**/*.js",
+                                "/**/*.png",
+                                "/**/*.jpg",
+                                "/**/*.jpeg");
+                registry.addInterceptor(dataInterceptor).excludePathPatterns(
+                                "/**/*.css",
+                                "/**/*.js",
+                                "/**/*.png",
+                                "/**/*.jpg",
+                                "/**/*.jpeg");
         }
 
 }

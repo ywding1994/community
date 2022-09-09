@@ -4,16 +4,17 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -26,12 +27,13 @@ import com.google.code.kaptcha.Producer;
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.entity.User;
 import com.ywding1994.community.service.UserService;
+import com.ywding1994.community.util.CommunityUtil;
+import com.ywding1994.community.util.RedisKeyUtil;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
 @Slf4j
@@ -44,8 +46,16 @@ public class LoginController {
     @Resource
     private Producer kaptchaProducer;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    /**
+     * 验证码过期时间（秒）
+     */
+    private static final int EXPIRED_SECONDS = 60;
 
     @RequestMapping(path = "/register", method = RequestMethod.GET)
     @ApiOperation(value = "请求注册页面", httpMethod = "GET")
@@ -101,13 +111,18 @@ public class LoginController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     @ApiOperation(value = "用户登录", httpMethod = "POST")
-    public String login(Model model, HttpServletResponse response, @ApiIgnore HttpSession session,
+    public String login(Model model, HttpServletResponse response,
+            @CookieValue("kaptchaOwner") @ApiParam(value = "验证码归属", readOnly = true) String kaptchaOwner,
             @RequestParam @ApiParam("用户名") String username,
             @RequestParam @ApiParam("密码") String password,
             @RequestParam @ApiParam("验证码") String code,
             @RequestParam(defaultValue = "false") @ApiParam(value = "记住我", defaultValue = "false") boolean rememberMe) {
         // 校验验证码
-        String kaptcha = (String) session.getAttribute("kaptcha");
+        String kaptcha = null;
+        if (StringUtils.isNoneBlank(kaptchaOwner)) {
+            String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+            kaptcha = (String) redisTemplate.opsForValue().get(redisKey);
+        }
         if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
             model.addAttribute("codeMsg", "验证码不正确！");
             return "/site/login";
@@ -132,20 +147,28 @@ public class LoginController {
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     @ApiOperation(value = "注销登录", httpMethod = "GET")
-    public String logout(@CookieValue("ticket") @ApiParam("登录凭证") String ticket) {
+    public String logout(@CookieValue("ticket") @ApiParam(value = "登录凭证", readOnly = true) String ticket) {
         userService.logout(ticket);
         return "redirect:/login";
     }
 
     @RequestMapping(path = "/kaptcha", method = RequestMethod.GET)
     @ApiOperation(value = "获取验证码", httpMethod = "GET")
-    public void getKaptcha(HttpServletResponse response, @ApiIgnore HttpSession session) {
+    public void getKaptcha(HttpServletResponse response) {
         // 生成验证码
         String text = kaptchaProducer.createText();
         BufferedImage image = kaptchaProducer.createImage(text);
 
-        // 将验证码存入session
-        session.setAttribute("kaptcha", text);
+        // 生成验证码归属
+        String kaptchaOwner = CommunityUtil.generateUUID();
+        Cookie cookie = new Cookie("kaptchaOwner", kaptchaOwner);
+        cookie.setMaxAge(EXPIRED_SECONDS);
+        cookie.setPath(contextPath);
+        response.addCookie(cookie);
+
+        // 将验证码存入Redis
+        String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
+        redisTemplate.opsForValue().set(redisKey, text, EXPIRED_SECONDS, TimeUnit.SECONDS);
 
         // 将图片输出到浏览器
         response.setContentType("image/png");

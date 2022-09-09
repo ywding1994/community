@@ -98,8 +98,7 @@ public class UserController {
         // 更新当前用户头像URL地址（web访问路径）
         User user = hostHolder.getUser();
         String headerUrl = domain + contextPath + "/user/header/" + fileName;
-        userService.update(
-                new LambdaUpdateWrapper<>(User.class).eq(User::getId, user.getId()).set(User::getHeaderUrl, headerUrl));
+        userService.updateHeader(user.getId(), headerUrl);
         return "redirect:/index";
     }
 
@@ -169,7 +168,7 @@ public class UserController {
     @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "请求个人主页", httpMethod = "GET")
     public String getProfilePage(Model model, @PathVariable("userId") @ApiParam("用户id") int userId) {
-        User user = userService.getById(userId);
+        User user = userService.getUserById(userId);
         if (Objects.isNull(user)) {
             throw new RuntimeException("该用户不存在！");
         }

@@ -3,9 +3,18 @@ package com.ywding1994.community.service;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ywding1994.community.entity.LoginTicket;
 import com.ywding1994.community.entity.User;
 
 public interface UserService extends IService<User> {
+
+    /**
+     * 根据用户id查询用户信息
+     *
+     * @param userId 用户id
+     * @return 查询到的用户实体
+     */
+    public User getUserById(int userId);
 
     /**
      * 根据用户名查询用户信息
@@ -57,5 +66,22 @@ public interface UserService extends IService<User> {
      * @return 修改结果
      */
     public boolean updatePassword(int userId, String password);
+
+    /**
+     * 更新头像
+     *
+     * @param userId    用户id
+     * @param headerUrl 头像地址
+     * @return 更新结果
+     */
+    public boolean updateHeader(int userId, String headerUrl);
+
+    /**
+     * 根据登录凭证查询对应的实体
+     *
+     * @param ticket 登陆凭证
+     * @return 登陆凭证对应的实体
+     */
+    public LoginTicket findLoginTicket(String ticket);
 
 }

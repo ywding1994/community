@@ -69,7 +69,7 @@ public class MessageController {
                 map.put("letterCount", messageService.findLetterCount(message.getConversationId()));
                 map.put("unreadCount", messageService.findLetterUnreadCount(user.getId(), message.getConversationId()));
                 int targetId = user.getId() == message.getFromId() ? message.getToId() : message.getFromId();
-                map.put("target", userService.getById(targetId));
+                map.put("target", userService.getUserById(targetId));
                 conversationMaps.add(map);
             }
         }
@@ -97,7 +97,7 @@ public class MessageController {
             for (Message message : letters) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("letter", message);
-                map.put("fromUser", userService.getById(message.getFromId()));
+                map.put("fromUser", userService.getUserById(message.getFromId()));
                 letterMaps.add(map);
             }
         }
@@ -124,7 +124,7 @@ public class MessageController {
         String[] ids = conversationId.split("_");
         int targetId = hostHolder.getUser().getId().equals(Integer.parseInt(ids[0])) ? Integer.parseInt(ids[1])
                 : Integer.parseInt(ids[0]);
-        return userService.getById(targetId);
+        return userService.getUserById(targetId);
     }
 
     /**
@@ -179,7 +179,7 @@ public class MessageController {
         if (Objects.nonNull(message)) {
             String content = HtmlUtils.htmlUnescape(message.getContent());
             Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-            messageVO.put("user", userService.getById((Integer) data.get("userId")));
+            messageVO.put("user", userService.getUserById((Integer) data.get("userId")));
             messageVO.put("entityType", data.get("entityType"));
             messageVO.put("entityId", data.get("entityId"));
             messageVO.put("postId", data.get("postId"));
@@ -199,7 +199,7 @@ public class MessageController {
         if (Objects.nonNull(message)) {
             String content = HtmlUtils.htmlUnescape(message.getContent());
             Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-            messageVO.put("user", userService.getById((Integer) data.get("userId")));
+            messageVO.put("user", userService.getUserById((Integer) data.get("userId")));
             messageVO.put("entityType", data.get("entityType"));
             messageVO.put("entityId", data.get("entityId"));
             messageVO.put("postId", data.get("postId"));
@@ -219,7 +219,7 @@ public class MessageController {
         if (Objects.nonNull(message)) {
             String content = HtmlUtils.htmlUnescape(message.getContent());
             Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-            messageVO.put("user", userService.getById((Integer) data.get("userId")));
+            messageVO.put("user", userService.getUserById((Integer) data.get("userId")));
             messageVO.put("entityType", data.get("entityType"));
             messageVO.put("entityId", data.get("entityId"));
 
@@ -260,12 +260,12 @@ public class MessageController {
                 // 内容
                 String content = HtmlUtils.htmlUnescape(notice.getContent());
                 Map<String, Object> data = JSONObject.parseObject(content, HashMap.class);
-                map.put("user", userService.getById((Integer) data.get("userId")));
+                map.put("user", userService.getUserById((Integer) data.get("userId")));
                 map.put("entityType", data.get("entityType"));
                 map.put("entityId", data.get("entityId"));
                 map.put("postId", data.get("postId"));
                 // 通知作者
-                map.put("fromUser", userService.getById(notice.getFromId()));
+                map.put("fromUser", userService.getUserById(notice.getFromId()));
                 noticeVoList.add(map);
             }
         }

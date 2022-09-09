@@ -57,7 +57,7 @@ public class SearchController {
                 // 讨论帖
                 map.put("post", discussPost);
                 // 作者
-                map.put("user", userService.getById(discussPost.getUserId()));
+                map.put("user", userService.getUserById(discussPost.getUserId()));
                 // 点赞数量
                 map.put("likeCount",
                         likeService.findEntityLikeCount(CommunityConstant.ENTITY_TYPE_POST, discussPost.getId()));

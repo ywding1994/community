@@ -1,14 +1,17 @@
 package com.ywding1994.community.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -21,10 +24,10 @@ import com.ywding1994.community.constant.UserConstant;
 import com.ywding1994.community.dao.UserMapper;
 import com.ywding1994.community.entity.LoginTicket;
 import com.ywding1994.community.entity.User;
-import com.ywding1994.community.service.LoginTicketService;
 import com.ywding1994.community.service.UserService;
 import com.ywding1994.community.util.CommunityUtil;
 import com.ywding1994.community.util.MailCilent;
+import com.ywding1994.community.util.RedisKeyUtil;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -36,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private TemplateEngine templateEngine;
 
     @Resource
-    private LoginTicketService loginTicketService;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -44,6 +47,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+    /**
+     * 缓存数据过期时间（秒）
+     */
+    private static final int EXPIRED_SECONDS = 3600;
+
+    @Override
+    public User getUserById(int userId) {
+        User user = getCache(userId);
+        if (Objects.isNull(user)) {
+            user = initCache(userId);
+        }
+        return user;
+    }
+
+    @Override
     public User getUserByUsername(String username) {
         return this.getOne(new LambdaQueryWrapper<>(User.class).eq(User::getUsername, username));
     }
@@ -111,10 +129,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public int activation(int userId, String activationCode) {
-        User user = this.getById(userId);
+        User user = this.getUserById(userId);
         if (user.getStatus() == UserConstant.Status.ACTIVATED) {
             return CommunityConstant.ACTIVATION_REPEAT;
         } else if (user.getActivationCode().equals(activationCode)) {
+            clearCache(userId);
             user.setStatus(UserConstant.Status.ACTIVATED);
             this.updateById(user);
             return CommunityConstant.ACTIVATION_SUCCESS;
@@ -158,14 +177,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 生成用户的登陆凭证
-        LoginTicket loginTicket = loginTicketService.generateLoginTicket(user, expiredSeconds);
+        LoginTicket loginTicket = LoginTicket.builder()
+                .userId(user.getId())
+                .ticket(CommunityUtil.generateUUID())
+                .status(LoginTicketConstant.Status.VALID)
+                .expired(new Date(System.currentTimeMillis() + expiredSeconds * 1000))
+                .build();
+        String redisKey = RedisKeyUtil.getTicketKey(loginTicket.getTicket());
+        redisTemplate.opsForValue().set(redisKey, loginTicket);
         map.put("ticket", loginTicket.getTicket());
         return map;
     }
 
     @Override
     public void logout(String ticket) {
-        loginTicketService.updateLoginTicket(ticket, LoginTicketConstant.Status.INVALID);
+        String redisKey = RedisKeyUtil.getTicketKey(ticket);
+        LoginTicket loginTicket = (LoginTicket) redisTemplate.opsForValue().get(redisKey);
+        loginTicket.setStatus(LoginTicketConstant.Status.INVALID);
+        redisTemplate.opsForValue().set(redisKey, loginTicket);
     }
 
     @Override
@@ -175,8 +204,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return false;
         }
 
+        clearCache(userId);
         user.setPassword(password);
         return this.updateById(user);
+    }
+
+    @Override
+    public boolean updateHeader(int userId, String headerUrl) {
+        User user = this.getById(userId);
+        if (Objects.isNull(user)) {
+            return false;
+        }
+
+        clearCache(userId);
+        user.setHeaderUrl(headerUrl);
+        return this.updateById(user);
+    }
+
+    @Override
+    public LoginTicket findLoginTicket(String ticket) {
+        String redisKey = RedisKeyUtil.getTicketKey(ticket);
+        return (LoginTicket) redisTemplate.opsForValue().get(redisKey);
+    }
+
+    /**
+     * 从缓存中获取指定用户信息
+     *
+     * @param userId 用户id
+     * @return 查询到的用户实体
+     */
+    private User getCache(int userId) {
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        return (User) redisTemplate.opsForValue().get(redisKey);
+    }
+
+    /**
+     * 当未查询到指定用户信息时将该用户实体在缓存中初始化
+     *
+     * @param userId 用户id
+     * @return 指定用户实体
+     */
+    private User initCache(int userId) {
+        User user = this.getById(userId);
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        redisTemplate.opsForValue().set(redisKey, user, EXPIRED_SECONDS, TimeUnit.SECONDS);
+        return user;
+    }
+
+    /**
+     * 当指定用户信息变更时清除对应的缓存数据
+     *
+     * @param userId 用户id
+     */
+    private void clearCache(int userId) {
+        String redisKey = RedisKeyUtil.getUserKey(userId);
+        redisTemplate.delete(redisKey);
     }
 
 }

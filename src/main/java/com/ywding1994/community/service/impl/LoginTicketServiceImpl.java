@@ -16,6 +16,7 @@ import com.ywding1994.community.service.LoginTicketService;
 import com.ywding1994.community.util.CommunityUtil;
 
 @Service
+@Deprecated
 public class LoginTicketServiceImpl extends ServiceImpl<LoginTicketMapper, LoginTicket> implements LoginTicketService {
 
         @Override

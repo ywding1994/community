@@ -104,7 +104,7 @@ public class FollowServiceImpl implements FollowService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Integer targetId : targetIds) {
             Map<String, Object> map = new HashMap<>();
-            User user = userService.getById(targetId);
+            User user = userService.getUserById(targetId);
             map.put("user", user);
             Double score = redisTemplate.opsForZSet().score(followeeKey, targetId);
             map.put("followTime", new Date(score.longValue()));
@@ -127,7 +127,7 @@ public class FollowServiceImpl implements FollowService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Integer targetId : targetIds) {
             Map<String, Object> map = new HashMap<>();
-            User user = userService.getById(targetId);
+            User user = userService.getUserById(targetId);
             map.put("user", user);
             Double score = redisTemplate.opsForZSet().score(followerKey, targetId);
             map.put("followTime", new Date(score.longValue()));

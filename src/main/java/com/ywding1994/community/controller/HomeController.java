@@ -55,7 +55,7 @@ public class HomeController {
             for (DiscussPost discussPost : discussPosts) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("post", discussPost);
-                User user = userService.getById(discussPost.getUserId());
+                User user = userService.getUserById(discussPost.getUserId());
                 map.put("user", user);
                 long likeCount = likeService.findEntityLikeCount(CommunityConstant.ENTITY_TYPE_POST,
                         discussPost.getId());

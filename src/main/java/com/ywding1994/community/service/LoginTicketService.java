@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ywding1994.community.entity.LoginTicket;
 import com.ywding1994.community.entity.User;
 
+@Deprecated
 public interface LoginTicketService extends IService<LoginTicket> {
 
     /**

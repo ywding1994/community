@@ -14,16 +14,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ywding1994.community.constant.LoginTicketConstant;
 import com.ywding1994.community.entity.LoginTicket;
 import com.ywding1994.community.entity.User;
-import com.ywding1994.community.service.LoginTicketService;
 import com.ywding1994.community.service.UserService;
 import com.ywding1994.community.util.CookieUtil;
 import com.ywding1994.community.util.HostHolder;
 
 @Component
 public class LoginTicketInterceptor implements HandlerInterceptor {
-
-    @Resource
-    private LoginTicketService loginTicketService;
 
     @Resource
     private UserService userService;
@@ -39,13 +35,13 @@ public class LoginTicketInterceptor implements HandlerInterceptor {
 
         if (Objects.nonNull(ticket)) {
             // 查询登录凭证
-            LoginTicket loginTicket = loginTicketService.findLoginTicket(ticket);
+            LoginTicket loginTicket = userService.findLoginTicket(ticket);
 
             // 校验登录凭证
             if (Objects.nonNull(loginTicket) && loginTicket.getStatus() == LoginTicketConstant.Status.VALID
                     && loginTicket.getExpired().after(new Date())) {
                 // 根据登录凭证查询用户
-                User user = userService.getById(loginTicket.getUserId());
+                User user = userService.getUserById(loginTicket.getUserId());
                 // 在本次请求中持有用户
                 hostHolder.setUser(user);
             }
