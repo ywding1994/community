@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ywding1994.community.annotation.LoginRequired;
 import com.ywding1994.community.constant.CommunityConstant;
 import com.ywding1994.community.entity.User;
